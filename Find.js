@@ -51,15 +51,25 @@ function readVenuesFile(callback) {
     });
 }
 
+//Cost defenitions:
+//U: length of Users
+//V: length of Venues
+//D: length of Union Drinks
+//F: length of Union Foods
+//Sum: (U + V) + (U + V) + (U * F) + (U * D) + (V * F) + (V * D) + (V * U) + (V * U) + V 
+
+//Cost: U + V
 function populateFoodsUnion() {
     let foodsData = users.map(user => user.wont_eat);
     foodsData = Array.prototype.concat.apply(foodsData, venues.map(venue => venue.food))
+    //check line below
     foods = Array.prototype.concat.apply([], foodsData);
     foods = foods.filter((val, ind, arr) => {
         return arr.indexOf(val) == ind;
     });
 }
 
+//Cost: U + V
 function populateDrinksUnion() {
     let drinksData = users.map(user => user.drinks);
     drinksData = Array.prototype.concat.apply(drinksData, venues.map(venue => venue.drinks))
@@ -70,6 +80,7 @@ function populateDrinksUnion() {
 
 }
 
+//Cost: U * F
 function addUserFoodBitmaps() {
     users.forEach(user => {
         user.foodBitmap = "";
@@ -82,6 +93,7 @@ function addUserFoodBitmaps() {
     })
 }
 
+//Cost: U * D
 function addUserDrinkBitmaps() {
     users.forEach(user => {
         user.drinkBitmap = "";
@@ -94,6 +106,7 @@ function addUserDrinkBitmaps() {
     })
 }
 
+//Cost: V * F
 function addVenueFoodBitmaps() {
     venues.forEach(venue => {
         venue.foodBitmap = "";
@@ -106,6 +119,7 @@ function addVenueFoodBitmaps() {
     })
 }
 
+//Cost: V * D
 function addVenueDrinkBitmaps() {
     venues.forEach(venue => {
         venue.drinkBitmap = "";
@@ -118,8 +132,8 @@ function addVenueDrinkBitmaps() {
     })
 }
 
+//Cost: V * U
 function determineVenuesHaveDrinkFor() {
-
     venues.forEach(venue => {
         venue.noDrinkFor = [];
         for (i = 0; i < users.length; i++) {
@@ -132,6 +146,7 @@ function determineVenuesHaveDrinkFor() {
     });
 }
 
+//Cost: V * U
 function determineVenuesHaveFoodFor() {
 
     venues.forEach(venue => {
@@ -146,6 +161,7 @@ function determineVenuesHaveFoodFor() {
     });
 }
 
+//cost : V 
 function decide() {
     venues.forEach(venue => {
         let qualifies = venue.qualifiesForDrink & venue.qualifiesForFood;
