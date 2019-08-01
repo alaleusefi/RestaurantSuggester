@@ -1,17 +1,17 @@
-fs = require("fs");
+var fs = require("fs");
 
-drinks = [];
-foods = [];
+var drinks = [];
+var foods = [];
 
-users = null;
-userDrinks = [];
-userFoods = [];
+var users = null;
+//var userDrinks = [];
+//var userFoods = [];
 
-venues = null;
-venueDrinks = [];
-venueFoods = [];
+var venues = null;
+//var venueDrinks = [];
+//var venueFoods = [];
 
-decision = { venuesToGo: [], venuesToAvoid: [] };
+var decision = { venuesToGo: [], venuesToAvoid: [] };
 
 start();
 readUsersFile(() =>
@@ -61,7 +61,7 @@ function readVenuesFile(callback) {
 //Cost: U + V
 function populateFoodsUnion() {
     let foodsData = users.map(user => user.wont_eat);
-    foodsData = Array.prototype.concat.apply(foodsData, venues.map(venue => venue.food))
+    foodsData = Array.prototype.concat.apply(foodsData, venues.map(venue => venue.food));
     //check line below
     foods = Array.prototype.concat.apply([], foodsData);
     foods = foods.filter((val, ind, arr) => {
@@ -72,7 +72,7 @@ function populateFoodsUnion() {
 //Cost: U + V
 function populateDrinksUnion() {
     let drinksData = users.map(user => user.drinks);
-    drinksData = Array.prototype.concat.apply(drinksData, venues.map(venue => venue.drinks))
+    drinksData = Array.prototype.concat.apply(drinksData, venues.map(venue => venue.drinks));
     drinks = Array.prototype.concat.apply([], drinksData);
     drinks = drinks.filter((val, ind, arr) => {
         return arr.indexOf(val) == ind;
@@ -89,8 +89,8 @@ function addUserFoodBitmaps() {
                 user.foodBitmap += 0;
             else
                 user.foodBitmap += 1;
-        })
-    })
+        });
+    });
 }
 
 //Cost: U * D
@@ -102,8 +102,8 @@ function addUserDrinkBitmaps() {
                 user.drinkBitmap += 1;
             else
                 user.drinkBitmap += 0;
-        })
-    })
+        });
+    });
 }
 
 //Cost: V * F
@@ -115,8 +115,8 @@ function addVenueFoodBitmaps() {
                 venue.foodBitmap += 1;
             else
                 venue.foodBitmap += 0;
-        })
-    })
+        });
+    });
 }
 
 //Cost: V * D
@@ -128,20 +128,20 @@ function addVenueDrinkBitmaps() {
                 venue.drinkBitmap += 1;
             else
                 venue.drinkBitmap += 0;
-        })
-    })
+        });
+    });
 }
 
 //Cost: V * U
 function determineVenuesHaveDrinkFor() {
     venues.forEach(venue => {
         venue.noDrinkFor = [];
-        for (i = 0; i < users.length; i++) {
-            user = users[i];
+        for (let i = 0; i < users.length; i++) {
+            let user = users[i];
             let bitMap = parseInt(venue.drinkBitmap, 2) & parseInt(user.drinkBitmap, 2);
             if (bitMap == 0)
                 venue.noDrinkFor.push(user.name);
-        };
+        }
         venue.qualifiesForDrink = venue.noDrinkFor.length == 0;
     });
 }
@@ -151,12 +151,12 @@ function determineVenuesHaveFoodFor() {
 
     venues.forEach(venue => {
         venue.noFoodFor = [];
-        for (i = 0; i < users.length; i++) {
-            user = users[i];
+        for (let i = 0; i < users.length; i++) {
+            let user = users[i];
             let bitMap = parseInt(venue.foodBitmap, 2) & parseInt(user.foodBitmap, 2);
             if (bitMap == 0)
                 venue.noFoodFor.push(user.name);
-        };
+        }
         venue.qualifiesForFood = venue.noFoodFor.length == 0;
     });
 }
